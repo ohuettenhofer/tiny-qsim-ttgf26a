@@ -7,7 +7,7 @@
 
 module tt_um_example (
     input  wire [7:0] ui_in,    // Dedicated inputs
-    output wire [7:0] uo_out,   // Dedicated outputs
+    output reg  [7:0] uo_out,   // Dedicated outputs
     input  wire [7:0] uio_in,   // IOs: Input path
     output wire [7:0] uio_out,  // IOs: Output path
     output wire [7:0] uio_oe,   // IOs: Enable path (active high: 0=input, 1=output)
@@ -16,12 +16,23 @@ module tt_um_example (
     input  wire       rst_n     // reset_n - low to reset
 );
 
-  // All output pins must be assigned. If not used, assign to 0.
-  assign uo_out  = ui_in + uio_in;  // Example: ou_out is the sum of ui_in and uio_in
-  assign uio_out = 0;
-  assign uio_oe  = 0;
+    wire _unused = &{uio_in, ena, clk, rst_n, 1'b0};
 
-  // List all unused inputs to prevent warnings
-  wire _unused = &{ena, clk, rst_n, 1'b0};
+    assign uio_out = 0;
+    assign uio_oe  = 0;
+
+    always_comb begin
+        priority casez (ui_in)
+            8'b00000000: uo_out = 8'b10111111;
+            8'b00000001: uo_out = 8'b10000110;
+            8'b0000001z: uo_out = 8'b11011011;
+            8'b000001zz: uo_out = 8'b11001111;
+            8'b00001zzz: uo_out = 8'b11100110;
+            8'b0001zzzz: uo_out = 8'b11101101;
+            8'b001zzzzz: uo_out = 8'b11111101;
+            8'b01zzzzzz: uo_out = 8'b10000111;
+            8'b1zzzzzzz: uo_out = 8'b11111111;
+        endcase
+    end
 
 endmodule

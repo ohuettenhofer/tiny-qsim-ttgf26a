@@ -1,4 +1,6 @@
 {
   "verilog.linting.linter": "verilator",
-  "verilog.formatting.verilogHDL.formatter": "verible-verilog-format"
+  "verilog.formatting.verilogHDL.formatter": "verible-verilog-format",
+  "editor.formatOnSave": true,
+  "verilog.formatting.veribleVerilogFormatter.arguments": "--indentation_spaces 4",
 }
